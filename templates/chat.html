@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - DEVNET</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .chat-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 0 0 20px 20px;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        .message.own {
+            background: #007bff;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+        .message.other {
+            background: #e9ecef;
+            color: #333;
+        }
+        .message-info {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        .container-badge {
+            background: #28a745;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+        }
+        .users-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        .user-item {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 8px;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .network-status {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        .input-container {
+            padding: 20px;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="chat-container">
+                    <div class="p-3 bg-primary text-white rounded-top">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0">
+                                <i class="fas fa-comments me-2"></i>
+                                Chat Distribué
+                            </h4>
+                            <div>
+                                <span class="badge bg-light text-dark me-2">
+                                    Conteneur: <code id="containerId">{{ container_id }}</code>
+                                </span>
+                                <button class="btn btn-sm btn-outline-light" onclick="refreshMessages()">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="messages-container" id="messagesContainer">
+                        <!-- Messages seront chargés ici -->
+                    </div>
+                    
+                    <div class="input-container">
+                        <form id="messageForm">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="messageInput" 
+                                       placeholder="Tapez votre message..." required>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Envoyer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="users-panel mb-3">
+                    <h5 class="mb-3">
+                        <i class="fas fa-users me-2"></i>
+                        Utilisateurs Actifs
+                    </h5>
+                    <div id="usersList">
+                        <!-- Utilisateurs seront chargés ici -->
+                    </div>
+                </div>
+                
+                <div class="network-status">
+                    <h6 class="mb-2">
+                        <i class="fas fa-network-wired me-2"></i>
+                        Statut Réseau
+                    </h6>
+                    <div id="networkStatus">
+                        <div class="spinner-border spinner-border-sm" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Instructions
+                        </h6>
+                        <ul class="small">
+                            <li>Entrez votre nom d'utilisateur</li>
+                            <li>Envoyez des messages en temps réel</li>
+                            <li>Les messages sont partagés entre conteneurs</li>
+                            <li>La communication se fait via réseau Docker</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour le nom d'utilisateur -->
+    <div class="modal fade" id="usernameModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Bienvenue dans le Chat</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="usernameForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Choisissez un nom d'utilisateur:</label>
+                            <input type="text" class="form-control" id="username" required 
+                                   placeholder="Entrez votre nom..." maxlength="20">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            Rejoindre le chat
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentUsername = '';
+        let messageInterval;
+        let usersInterval;
+        let networkInterval;
+
+        // Vérifier si l'utilisateur a déjà un nom
+        if (!localStorage.getItem('chatUsername')) {
+            const modal = new bootstrap.Modal(document.getElementById('usernameModal'));
+            modal.show();
+        } else {
+            currentUsername = localStorage.getItem('chatUsername');
+            startChat();
+        }
+
+        document.getElementById('usernameForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            if (username) {
+                registerUser(username);
+            }
+        });
+
+        document.getElementById('messageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (message && currentUsername) {
+                sendMessage(message);
+                messageInput.value = '';
+            }
+        });
+
+        async function registerUser(username) {
+            try {
+                const response = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: username })
+                });
+                
+                if (response.ok) {
+                    currentUsername = username;
+                    localStorage.setItem('chatUsername', username);
+                    bootstrap.Modal.getInstance(document.getElementById('usernameModal')).hide();
+                    startChat();
+                } else {
+                    const error = await response.json();
+                    alert('Erreur: ' + error.error);
+                }
+            } catch (error) {
+                alert('Erreur de connexion: ' + error.message);
+            }
+        }
+
+        function startChat() {
+            loadMessages();
+            loadUsers();
+            loadNetworkStatus();
+            
+            // Démarrer le rafraîchissement automatique
+            messageInterval = setInterval(loadMessages, 3000);
+            usersInterval = setInterval(loadUsers, 5000);
+            networkInterval = setInterval(loadNetworkStatus, 10000);
+        }
+
+        async function loadMessages() {
+            try {
+                const response = await fetch('/api/messages');
+                const messages = await response.json();
+                displayMessages(messages);
+            } catch (error) {
+                console.error('Erreur de chargement des messages:', error);
+            }
+        }
+
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const users = await response.json();
+                displayUsers(users);
+            } catch (error) {
+                console.error('Erreur de chargement des utilisateurs:', error);
+            }
+        }
+
+        async function loadNetworkStatus() {
+            try {
+                const response = await fetch('/api/network/status');
+                const status = await response.json();
+                displayNetworkStatus(status);
+            } catch (error) {
+                console.error('Erreur de chargement du statut réseau:', error);
+            }
+        }
+
+        function displayMessages(messages) {
+            const container = document.getElementById('messagesContainer');
+            container.innerHTML = '';
+            
+            messages.reverse().forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.username === currentUsername ? 'own' : 'other'}`;
+                
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <strong>${msg.username}</strong>
+                        ${msg.container_id ? `<span class="container-badge ms-2">${msg.container_id}</span>` : ''}
+                        <div>${msg.message}</div>
+                        <div class="message-info">
+                            ${new Date(msg.timestamp).toLocaleString()}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(messageDiv);
+            });
+            
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function displayUsers(users) {
+            const container = document.getElementById('usersList');
+            container.innerHTML = '';
+            
+            users.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.className = 'user-item';
+                userDiv.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>
+                            <i class="fas fa-user-circle me-2"></i>
+                            ${user.username}
+                        </span>
+                        ${user.container_id ? `<small class="text-muted">${user.container_id}</small>` : ''}
+                    </div>
+                `;
+                container.appendChild(userDiv);
+            });
+        }
+
+        function displayNetworkStatus(status) {
+            const container = document.getElementById('networkStatus');
+            container.innerHTML = `
+                <div class="small">
+                    <div class="mb-2">
+                        <strong>Conteneur actuel:</strong> <code>${status.current_container}</code>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Autres conteneurs:</strong> ${status.other_containers.length}
+                    </div>
+                    <div>
+                        <strong>Réseau:</strong> <span class="badge bg-success">${status.network_mode}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function sendMessage(message) {
+            try {
+                const response = await fetch('/api/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: currentUsername,
+                        message: message
+                    })
+                });
+                
+                if (response.ok) {
+                    loadMessages(); // Rafraîchir les messages
+                } else {
+                    const error = await response.json();
+                    alert('Erreur: ' + error.error);
+                }
+            } catch (error) {
+                alert('Erreur de connexion: ' + error.message);
+            }
+        }
+
+        function refreshMessages() {
+            loadMessages();
+            loadUsers();
+            loadNetworkStatus();
+        }
+
+        // Nettoyer les intervalles lors de la fermeture
+        window.addEventListener('beforeunload', function() {
+            clearInterval(messageInterval);
+            clearInterval(usersInterval);
+            clearInterval(networkInterval);
+        });
+    </script>
+</body>
+</html>

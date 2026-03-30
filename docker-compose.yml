@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  # Application Flask avec boutique et admin
+  boutique-app:
+    build: .
+    container_name: ma-boutique
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - HOSTNAME=ma-boutique
+    volumes:
+      - boutique_data:/app/data
+    networks:
+      - boutique_network
+    restart: unless-stopped
+
+# Réseau Docker personnalisé
+networks:
+  boutique_network:
+    driver: bridge
+
+# Volume pour la persistance des données SQLite
+volumes:
+  boutique_data:
+    driver: local
