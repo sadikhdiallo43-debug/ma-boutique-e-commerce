@@ -121,60 +121,60 @@ def init_sample_products():
     if count == 0:
         sample_products = [
             {
-                'nom': 'Robe Élégante Soie',
-                'description': 'Robe longue en soie avec design floral, parfaite pour occasions spéciales',
-                'prix': 45000,
-                'stock': 12,
-                'image_url': 'https://images.unsplash.com/photo-1594633312681-ba9d7b5f5c3f?w=300&h=400&fit=crop'
+                'nom': 'Robe Cocktail Rouge',
+                'description': 'Robe élégante rouge parfait pour soirées et événements spéciaux',
+                'prix': 55000,
+                'stock': 10,
+                'image_url': 'https://images.pexels.com/photos/96446/pexels-photo-96446.jpeg?w=300&h=400&fit=crop'
             },
             {
-                'nom': 'Blazer Chic',
-                'description': 'Blazer moderne coupe ajustée en laine mélangée, idéal pour le bureau',
-                'prix': 65000,
-                'stock': 18,
-                'image_url': 'https://images.unsplash.com/photo-1554568218-0f1715e72254?w=300&h=400&fit=crop'
-            },
-            {
-                'nom': 'Jean Slim Fit',
-                'description': 'Jean slim de haute qualité avec stretch, disponible en plusieurs couleurs',
-                'prix': 28000,
-                'stock': 35,
-                'image_url': 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=400&fit=crop'
-            },
-            {
-                'nom': 'Chemise en Lin',
-                'description': 'Chemise légère en lin parfait pour l\'été, coupe moderne et élégante',
-                'prix': 22000,
-                'stock': 25,
-                'image_url': 'https://images.unsplash.com/photo-1596755094514-f87e5ccf6e6d?w=300&h=400&fit=crop'
-            },
-            {
-                'nom': 'Veste en Cuir',
-                'description': 'Veste en cuir véritable style motard, doublure confortable',
+                'nom': 'Costume Business Noir',
+                'description': 'Costume deux pièces élégant pour professionnels et occasions formelles',
                 'prix': 85000,
                 'stock': 8,
-                'image_url': 'https://images.unsplash.com/photo-1551488831-008076e2dcba?w=300&h=400&fit=crop'
+                'image_url': 'https://images.pexels.com/photos/297933/pexels-photo-297933.jpeg?w=300&h=400&fit=crop'
             },
             {
-                'nom': 'Pull en Cashmere',
-                'description': 'Pull luxueux en cachemire, doux et chaud pour l\'hiver',
-                'prix': 72000,
-                'stock': 15,
-                'image_url': 'https://images.unsplash.com/photo-1578922772014-3c5e5a14e4f5?w=300&h=400&fit=crop'
-            },
-            {
-                'nom': 'Jupe Plissée',
-                'description': 'Jupe plissée tendance, longueur midi, tissu fluide et élégant',
+                'nom': 'Jean Slim Bleu',
+                'description': 'Jean slim fit moderne en denim de haute qualité',
                 'prix': 32000,
-                'stock': 20,
-                'image_url': 'https://images.unsplash.com/photo-1595775456939-3a8b5b1c3e4e?w=300&h=400&fit=crop'
+                'stock': 25,
+                'image_url': 'https://images.pexels.com/photos/1852608/pexels-photo-1852608.jpeg?w=300&h=400&fit=crop'
             },
             {
-                'nom': 'Pantalon Chino',
-                'description': 'Pantalon chino classique, polyvalent et confortable pour toutes occasions',
-                'prix': 35000,
+                'nom': 'Chemise Blanche',
+                'description': 'Chemise classique en coton, indispensable pour toute garde-robe',
+                'prix': 18000,
                 'stock': 30,
-                'image_url': 'https://images.unsplash.com/photo-1594633312681-ba9d7b5f5c3f?w=300&h=400&fit=crop'
+                'image_url': 'https://images.pexels.com/photos/1042144/pexels-photo-1042144.jpeg?w=300&h=400&fit=crop'
+            },
+            {
+                'nom': 'Veste en Cuir Noir',
+                'description': 'Veste en cuir véritable style moderne, protection et élégance',
+                'prix': 95000,
+                'stock': 6,
+                'image_url': 'https://images.pexels.com/photos/1181201/pexels-photo-1181201.jpeg?w=300&h=400&fit=crop'
+            },
+            {
+                'nom': 'Pull Laine Gris',
+                'description': 'Pull confortable en laine merinos pour l\'hiver',
+                'prix': 38000,
+                'stock': 15,
+                'image_url': 'https://images.pexels.com/photos/996329/pexels-photo-996329.jpeg?w=300&h=400&fit=crop'
+            },
+            {
+                'nom': 'Jupe Midi Noire',
+                'description': 'Jupe longue élégante, polyvalente pour toutes occasions',
+                'prix': 28000,
+                'stock': 20,
+                'image_url': 'https://images.pexels.com/photos/2736333/pexels-photo-2736333.jpeg?w=300&h=400&fit=crop'
+            },
+            {
+                'nom': 'Pantalon Chino Beige',
+                'description': 'Pantalon chino confortable et stylé pour quotidien',
+                'prix': 35000,
+                'stock': 22,
+                'image_url': 'https://images.pexels.com/photos/52518/jeans-pants-blue-jeans-52518.jpeg?w=300&h=400&fit=crop'
             }
         ]
         

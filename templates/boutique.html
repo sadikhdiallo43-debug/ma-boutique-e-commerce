@@ -9,14 +9,14 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         :root {
-            --fashion-gradient: linear-gradient(135deg, #ff6b9d 0%, #c66cfd 50%, #8b5cf6 100%);
-            --accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --luxury-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --dark-bg: #1a1a2e;
-            --light-bg: #fafafa;
-            --fashion-pink: #ff6b9d;
-            --fashion-purple: #c66cfd;
+            --night-blue-gradient: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+            --accent-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --luxury-gradient: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+            --success-gradient: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            --dark-bg: #0f172a;
+            --light-bg: #f8fafc;
+            --night-blue: #1e3a8a;
+            --accent-blue: #2563eb;
         }
 
         * {
@@ -41,7 +41,7 @@
         .navbar-brand {
             font-weight: 700;
             font-size: 1.5rem;
-            background: var(--fashion-gradient);
+            background: var(--night-blue-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -66,7 +66,7 @@
             left: 50%;
             width: 0;
             height: 2px;
-            background: var(--fashion-gradient);
+            background: var(--night-blue-gradient);
             transition: all 0.3s;
             transform: translateX(-50%);
         }
@@ -76,9 +76,9 @@
             width: 80%;
         }
 
-        /* Enhanced Hero Section with Fashion Theme */
+        /* Enhanced Hero Section with Night Blue Theme */
         .hero-section {
-            background: linear-gradient(135deg, #ff6b9d 0%, #c66cfd 40%, #8b5cf6 70%, #667eea 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 40%, #2563eb 70%, #3b82f6 100%);
             color: white;
             padding: 100px 0;
             position: relative;
@@ -181,7 +181,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--fashion-gradient);
+            background: var(--night-blue-gradient);
             opacity: 0;
             transition: opacity 0.4s;
             z-index: 1;
@@ -204,7 +204,7 @@
 
         .product-card:hover {
             transform: translateY(-20px) rotateX(5deg) scale(1.03);
-            box-shadow: 0 25px 50px rgba(255, 107, 157, 0.25), 0 10px 25px rgba(198, 108, 253, 0.15);
+            box-shadow: 0 25px 50px rgba(30, 58, 138, 0.25), 0 10px 25px rgba(37, 99, 235, 0.15);
         }
 
         .product-card:hover::before {
@@ -305,7 +305,7 @@
             left: 0;
             width: 0;
             height: 3px;
-            background: var(--fashion-gradient);
+            background: var(--night-blue-gradient);
             transition: width 0.3s;
             border-radius: 2px;
         }
@@ -383,7 +383,7 @@
         }
 
         .btn-add-cart {
-            background: var(--fashion-gradient);
+            background: var(--night-blue-gradient);
             border: none;
             border-radius: 50px;
             padding: 15px 30px;
@@ -395,7 +395,7 @@
             color: white;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3);
+            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3);
         }
 
         .btn-add-cart::before {
@@ -424,7 +424,7 @@
 
         .btn-add-cart:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(255, 107, 157, 0.4), 0 5px 15px rgba(198, 108, 253, 0.3);
+            box-shadow: 0 15px 40px rgba(30, 58, 138, 0.4), 0 5px 15px rgba(37, 99, 235, 0.3);
         }
 
         .btn-add-cart:hover::before {
