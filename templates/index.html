@@ -4,68 +4,645 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Distribué & Boutique - DEVNET</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-bg: #1a1a2e;
+            --card-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(270deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+            background-size: 1200% 1200%;
+            animation: gradientShift 20s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .floating-shapes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(3px);
+            animation: float 25s infinite ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .shape:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            left: 5%;
+            top: 15%;
+            border-radius: 50%;
+            animation-delay: 0s;
+            animation-duration: 20s;
+        }
+
+        .shape:nth-child(2) {
+            width: 180px;
+            height: 180px;
+            right: 10%;
+            top: 50%;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation-delay: 4s;
+            animation-duration: 25s;
+        }
+
+        .shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            left: 60%;
+            bottom: 15%;
+            border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+            animation-delay: 8s;
+            animation-duration: 30s;
+        }
+
+        .shape:nth-child(4) {
+            width: 80px;
+            height: 80px;
+            left: 25%;
+            top: 70%;
+            border-radius: 50%;
+            animation-delay: 12s;
+            animation-duration: 22s;
+        }
+
+        .shape:nth-child(5) {
+            width: 100px;
+            height: 100px;
+            right: 25%;
+            top: 20%;
+            border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%;
+            animation-delay: 16s;
+            animation-duration: 28s;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 0.8;
+            }
+            25% { 
+                transform: translateY(-30px) rotate(90deg) scale(1.1);
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translateY(20px) rotate(180deg) scale(0.9);
+                opacity: 0.9;
+            }
+            75% { 
+                transform: translateY(-15px) rotate(270deg) scale(1.05);
+                opacity: 0.7;
+            }
+        }
+
         .main-card {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
         }
+
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .main-card:hover::before {
+            left: 100%;
+        }
+
         .feature-card {
-            transition: transform 0.3s ease;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
         }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+            border-radius: 25px;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+            opacity: 0;
+            z-index: 0;
+        }
+
         .feature-card:hover {
+            transform: translateY(-15px) rotateX(5deg) scale(1.05);
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.2), 0 10px 25px rgba(118, 75, 162, 0.15);
+        }
+
+        .feature-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
+            animation: shimmerCard 1.5s ease-in-out;
+        }
+
+        @keyframes shimmerCard {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .network-icon {
+            font-size: 3.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover .network-icon {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            animation: titleGlow 3s ease-in-out infinite alternate, titleFloat 4s ease-in-out infinite;
+            text-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes titleGlow {
+            from { 
+                filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5)) 
+                      drop-shadow(0 0 40px rgba(118, 75, 162, 0.3));
+            }
+            to { 
+                filter: drop-shadow(0 0 30px rgba(118, 75, 162, 0.8)) 
+                      drop-shadow(0 0 50px rgba(240, 147, 251, 0.4));
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #6c757d;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 18px 35px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-primary-custom::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.5s;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4), 0 8px 20px rgba(118, 75, 162, 0.3);
+            color: white;
+        }
+
+        .btn-primary-custom:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary-custom:active::after {
+            width: 300px;
+            height: 300px;
+            opacity: 0;
+        }
+
+        .btn-success-custom {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .btn-warning-custom {
+            background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
+        }
+
+        .btn-secondary-custom {
+            background: linear-gradient(135deg, #868f96 0%, #596164 100%);
+        }
+
+        .project-badge {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #667eea 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: inline-block;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite, badgeFloat 3s ease-in-out infinite;
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        @keyframes badgeFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
             transform: translateY(-5px);
         }
-        .network-icon {
-            font-size: 3rem;
-            color: #667eea;
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .network-info-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 2rem;
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(102, 126, 234, 0.1);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Particle Effects */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) translateX(10px) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) translateX(-10px) scale(1);
+            }
+            100% {
+                transform: translateY(-10vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 12s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 15s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 18s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 6s; animation-duration: 14s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 8s; animation-duration: 16s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 10s; animation-duration: 13s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 12s; animation-duration: 17s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 14s; animation-duration: 15s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 16s; animation-duration: 19s; }
+        .particle:nth-child(10) { left: 95%; animation-delay: 18s; animation-duration: 20s; }
+
+        /* Enhanced Parallax Effect */
+        .parallax-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 110%;
+            height: 110%;
+            background: radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(240, 147, 251, 0.1) 0%, transparent 50%);
+            animation: parallaxMove 25s ease-in-out infinite;
+        }
+
+        @keyframes parallaxMove {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(-2%, -1%) scale(1.05); }
+            50% { transform: translate(1%, -2%) scale(1.02); }
+            75% { transform: translate(-1%, 1%) scale(1.03); }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .feature-card {
+                margin-bottom: 20px;
+            }
+
+            .particles {
+                display: none;
+            }
+
+            .floating-shapes {
+                display: none;
+            }
+
+            .parallax-container {
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .project-badge {
+                font-size: 0.9rem;
+                padding: 8px 20px;
+            }
+
+            .btn-primary-custom {
+                padding: 15px 25px;
+                font-size: 1rem;
+                margin: 8px 5px;
+            }
+
+            .feature-card {
+                margin-bottom: 15px;
+            }
+
+            .network-icon {
+                font-size: 2.5rem;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Particles and Parallax Effects -->
+    <div class="parallax-container">
+        <div class="parallax-layer"></div>
+    </div>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="animated-bg"></div>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <div class="main-card p-5">
+                <div class="main-card p-5" data-aos="fade-up" data-aos-duration="1000">
                     <div class="text-center mb-5">
-                        <h1 class="display-4 fw-bold text-primary mb-3">
+                        <div class="project-badge" data-aos="fade-down" data-aos-delay="200">
+                            <i class="fas fa-graduation-cap me-2"></i>
+                            Projet d'Examen - L3 Réseaux et Informatique
+                        </div>
+                        <h1 class="hero-title" data-aos="zoom-in" data-aos-delay="400">
                             🌐 Chat Distribué & 🛍️ Boutique E-Commerce
                         </h1>
-                        <p class="lead text-muted">
+                        <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="600">
                             Application de chat distribuée et boutique en ligne avec notifications en temps réel
                         </p>
-                        <div class="badge bg-success fs-6 mb-3">
-                            Projet d'Examen - L3 Réseaux et Informatique
+                    </div>
+
+                    <!-- Statistics Section -->
+                    <div class="stats-container mb-5" data-aos="fade-up" data-aos-delay="800">
+                        <div class="stat-card">
+                            <div class="stat-number">🚀</div>
+                            <h6>Haute Performance</h6>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">🔒</div>
+                            <h6>Sécurisé</h6>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">📱</div>
+                            <h6>Responsive</h6>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">⚡</div>
+                            <h6>Temps Réel</h6>
                         </div>
                     </div>
 
                     <div class="row g-4 mb-5">
-                        <div class="col-md-3">
+                        <div class="col-md-3" data-aos="flip-left" data-aos-delay="200">
                             <div class="card feature-card h-100">
                                 <div class="card-body text-center">
                                     <div class="network-icon mb-3">💬</div>
                                     <h5 class="card-title">Chat Distribué</h5>
-                                    <p class="card-text">Communication en temps réel entre conteneurs</p>
+                                    <p class="card-text">Communication en temps réel entre conteneurs Docker</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3" data-aos="flip-left" data-aos-delay="400">
                             <div class="card feature-card h-100">
                                 <div class="card-body text-center">
                                     <div class="network-icon mb-3">🛍️</div>
                                     <h5 class="card-title">Boutique</h5>
-                                    <p class="card-text">E-commerce avec gestion des produits et commandes</p>
+                                    <p class="card-text">E-commerce moderne avec gestion complète des produits</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3" data-aos="flip-left" data-aos-delay="600">
                             <div class="card feature-card h-100">
                                 <div class="card-body text-center">
                                     <div class="network-icon mb-3">🔔</div>
@@ -74,36 +651,36 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3" data-aos="flip-left" data-aos-delay="800">
                             <div class="card feature-card h-100">
                                 <div class="card-body text-center">
                                     <div class="network-icon mb-3">🐳</div>
                                     <h5 class="card-title">Docker</h5>
-                                    <p class="card-text">Architecture conteneurisée scalable</p>
+                                    <p class="card-text">Architecture conteneurisée scalable et moderne</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="text-center">
+                    <div class="text-center" data-aos="fade-up" data-aos-delay="1000">
                         <h3 class="mb-4">Démarrer l'Application</h3>
                         <div class="row justify-content-center">
                             <div class="col-md-8">
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Choisissez votre mode d'accès</h5>
+                                <div class="card border-0 shadow-lg">
+                                    <div class="card-body p-4">
+                                        <h5 class="card-title mb-4">Choisissez votre mode d'accès</h5>
                                         <div class="d-grid gap-3">
-                                            <a href="/chat" class="btn btn-primary btn-lg">
-                                                💬 Accéder au Chat
+                                            <a href="/chat" class="btn-primary-custom" data-aos="slide-right" data-aos-delay="200">
+                                                <i class="fas fa-comments me-2"></i> Accéder au Chat
                                             </a>
-                                            <a href="/boutique" class="btn btn-success btn-lg">
-                                                🛍️ Visiter la Boutique
+                                            <a href="/boutique" class="btn-primary-custom btn-success-custom" data-aos="slide-right" data-aos-delay="400">
+                                                <i class="fas fa-shopping-bag me-2"></i> Visiter la Boutique
                                             </a>
-                                            <a href="/admin" class="btn btn-warning btn-lg">
-                                                ⚙️ Administration
+                                            <a href="/admin" class="btn-primary-custom btn-warning-custom" data-aos="slide-right" data-aos-delay="600">
+                                                <i class="fas fa-cog me-2"></i> Administration
                                             </a>
-                                            <button class="btn btn-outline-secondary" onclick="showNetworkInfo()">
-                                                📊 Voir les informations réseau
+                                            <button class="btn-primary-custom btn-secondary-custom" onclick="showNetworkInfo()" data-aos="slide-right" data-aos-delay="800">
+                                                <i class="fas fa-network-wired me-2"></i> Voir les informations réseau
                                             </button>
                                         </div>
                                     </div>
@@ -112,16 +689,15 @@
                         </div>
                     </div>
 
-                    <div id="networkInfo" class="mt-4" style="display: none;">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Informations Réseau</h5>
-                            </div>
-                            <div class="card-body">
-                                <div id="networkStatus">
-                                    <div class="spinner-border text-primary" role="status">
-                                        <span class="visually-hidden">Chargement...</span>
-                                    </div>
+                    <div id="networkInfo" class="network-info-card" style="display: none;">
+                        <div class="card-header border-0">
+                            <h5 class="mb-0"><i class="fas fa-server me-2"></i>Informations Réseau</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="networkStatus">
+                                <div class="text-center py-4">
+                                    <div class="loading-spinner mx-auto mb-3"></div>
+                                    <p class="text-muted">Chargement des informations réseau...</p>
                                 </div>
                             </div>
                         </div>
@@ -131,51 +707,111 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Initialize AOS (Animate On Scroll)
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
+        // Enhanced network info function with better UI
         async function showNetworkInfo() {
             const networkDiv = document.getElementById('networkInfo');
             const statusDiv = document.getElementById('networkStatus');
             
+            if (networkDiv.style.display === 'block') {
+                networkDiv.style.display = 'none';
+                return;
+            }
+            
             networkDiv.style.display = 'block';
+            networkDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             
             try {
                 const response = await fetch('/api/network/status');
                 const data = await response.json();
                 
                 statusDiv.innerHTML = `
-                    <div class="row">
+                    <div class="row g-3">
                         <div class="col-md-6">
-                            <h6>Conteneur Actuel</h6>
-                            <p><code>${data.current_container}</code></p>
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h6 class="text-primary"><i class="fas fa-server me-2"></i>Conteneur Actuel</h6>
+                                    <p class="mb-0"><code class="bg-dark text-white px-2 py-1 rounded">${data.current_container}</code></p>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <h6>Mode Réseau</h6>
-                            <p><span class="badge bg-info">${data.network_mode}</span></p>
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h6 class="text-success"><i class="fas fa-network-wired me-2"></i>Mode Réseau</h6>
+                                    <p class="mb-0"><span class="badge bg-success fs-6">${data.network_mode}</span></p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mt-3">
                         <div class="col-12">
-                            <h6>Autres Conteneurs Actifs</h6>
-                            <p>${data.other_containers.length > 0 ? 
-                                data.other_containers.map(c => `<code>${c}</code>`).join(', ') : 
-                                'Aucun autre conteneur détecté'}</p>
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h6 class="text-info"><i class="fas fa-cubes me-2"></i>Autres Conteneurs Actifs</h6>
+                                    <p class="mb-2">${data.other_containers.length > 0 ? 
+                                        data.other_containers.map(c => `<span class="badge bg-secondary me-2">${c}</span>`).join('') : 
+                                        '<span class="text-muted">Aucun autre conteneur détecté</span>'}</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mt-3">
                         <div class="col-12">
-                            <small class="text-muted">Dernière mise à jour: ${new Date(data.timestamp).toLocaleString()}</small>
+                            <div class="text-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Dernière mise à jour: ${new Date(data.timestamp).toLocaleString()}
+                                </small>
+                            </div>
                         </div>
                     </div>
                 `;
             } catch (error) {
                 statusDiv.innerHTML = `
-                    <div class="alert alert-danger">
-                        Erreur lors de la récupération des informations réseau: ${error.message}
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Erreur:</strong> Impossible de récupérer les informations réseau
+                        <br><small>${error.message}</small>
                     </div>
                 `;
             }
         }
+
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add parallax effect to floating shapes
+        document.addEventListener('mousemove', (e) => {
+            const shapes = document.querySelectorAll('.shape');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 20;
+                const xOffset = (x - 0.5) * speed;
+                const yOffset = (y - 0.5) * speed;
+                
+                shape.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+        });
     </script>
 </body>
 </html>

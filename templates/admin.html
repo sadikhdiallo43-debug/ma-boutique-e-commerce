@@ -4,97 +4,432 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administration - MaBoutique</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warning-gradient: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
+            --dark-bg: #1a1a2e;
+            --sidebar-bg: #2d3748;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7fafc;
+        }
+
+        /* Enhanced Sidebar */
         .sidebar {
             min-height: 100vh;
-            background-color: #343a40;
+            background: var(--sidebar-bg);
+            box-shadow: 5px 0 20px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: all 0.3s;
         }
+
+        .sidebar-header {
+            background: var(--primary-gradient);
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .sidebar-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
         .sidebar .nav-link {
-            color: white;
-            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 15px 25px;
             border-radius: 0;
+            transition: all 0.3s;
+            position: relative;
+            font-weight: 500;
         }
+
+        .sidebar .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--primary-gradient);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
         .sidebar .nav-link:hover {
-            background-color: #495057;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
         }
+
+        .sidebar .nav-link:hover::before {
+            transform: scaleY(1);
+        }
+
         .sidebar .nav-link.active {
-            background-color: #007bff;
+            background: rgba(102, 126, 234, 0.2);
+            color: white;
         }
+
+        .sidebar .nav-link.active::before {
+            transform: scaleY(1);
+        }
+
+        /* Main Content Area */
         .main-content {
-            padding: 20px;
+            margin-left: 280px;
+            padding: 30px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
         }
+
+        /* Enhanced Cards */
+        .dashboard-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            transition: all 0.3s;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .dashboard-card:hover::before {
+            left: 100%;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .stat-card-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .stat-card-success {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .stat-card-warning {
+            background: var(--warning-gradient);
+            color: white;
+        }
+
+        .stat-card-info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 10px 0;
+            animation: countUp 1s ease-out;
+        }
+
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Enhanced Tables */
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 20px 25px;
+            border: none;
+        }
+
+        .table {
+            margin: 0;
+        }
+
+        .table thead th {
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+            color: #495057;
+            padding: 15px;
+        }
+
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .table tbody tr {
+            transition: all 0.2s;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.01);
+        }
+
+        /* Enhanced Buttons */
+        .btn-action {
+            padding: 8px 15px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 0 2px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Notification Badge */
         .notification-badge {
             position: absolute;
             top: -5px;
             right: -5px;
-            background: #dc3545;
+            background: var(--warning-gradient);
             color: white;
             border-radius: 50%;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 10px;
+            font-weight: 700;
+            animation: pulse 2s infinite;
         }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Status Badges */
         .status-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 600;
+            text-transform: uppercase;
         }
-        .status-en_attente { background-color: #ffc107; color: #000; }
-        .status-confirmee { background-color: #28a745; color: white; }
-        .status-expediee { background-color: #17a2b8; color: white; }
-        .status-annulee { background-color: #dc3545; color: white; }
-        .message-non_lu { background-color: #f8f9fa; border-left: 4px solid #007bff; }
+
+        .status-en_attente { 
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            color: white; 
+        }
+
+        .status-confirmee { 
+            background: var(--success-gradient);
+            color: white; 
+        }
+
+        .status-expediee { 
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white; 
+        }
+
+        .status-annulee { 
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white; 
+        }
+
+        /* Enhanced Modals */
+        .modal-content {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 20px 25px;
+        }
+
+        .modal-title {
+            font-weight: 700;
+        }
+
+        .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        /* Message Cards */
+        .message-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .message-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .message-non_lu { 
+            border-left-color: #667eea;
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.05), transparent);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            border: 3px solid rgba(102, 126, 234, 0.1);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        /* Floating Animation */
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Form Controls */
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
     </style>
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <h5 class="text-white text-center mb-4">
-                        <i class="fas fa-store"></i> Administration
-                    </h5>
-                    <div class="text-white text-center mb-3">
-                        <small><i class="fas fa-user"></i> {{ session.get('admin_username', 'Admin') }}</small>
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="sidebar-header">
+                    <h4 class="mb-0 float-animation">
+                        <i class="fas fa-store me-2"></i>Administration
+                    </h4>
+                </div>
+                <div class="position-sticky">
+                    <div class="text-white text-center mb-3 px-3">
+                        <small class="d-block mb-2">
+                            <i class="fas fa-user-circle me-1"></i>
+                            {{ session.get('admin_username', 'Admin') }}
+                        </small>
+                        <div class="border-top border-secondary pt-2"></div>
                     </div>
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link active" href="#" onclick="showSection('dashboard')">
-                                <i class="fas fa-tachometer-alt"></i> Tableau de bord
+                                <i class="fas fa-tachometer-alt me-2"></i> Tableau de bord
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" onclick="showSection('products')">
-                                <i class="fas fa-box"></i> Produits
+                                <i class="fas fa-box me-2"></i> Produits
                             </a>
                         </li>
                         <li class="nav-item position-relative">
                             <a class="nav-link" href="#" onclick="showSection('orders')">
-                                <i class="fas fa-shopping-cart"></i> Commandes
+                                <i class="fas fa-shopping-cart me-2"></i> Commandes
                                 <span class="notification-badge" id="orderBadge" style="display: none;">0</span>
                             </a>
                         </li>
                         <li class="nav-item position-relative">
                             <a class="nav-link" href="#" onclick="showSection('messages')">
-                                <i class="fas fa-envelope"></i> Messages
+                                <i class="fas fa-envelope me-2"></i> Messages
                                 <span class="notification-badge" id="messageBadge" style="display: none;">0</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/boutique" target="_blank">
-                                <i class="fas fa-external-link-alt"></i> Voir la boutique
+                                <i class="fas fa-external-link-alt me-2"></i> Voir la boutique
                             </a>
                         </li>
                         <li class="nav-item mt-3">
                             <a class="nav-link text-danger" href="/admin/logout">
-                                <i class="fas fa-sign-out-alt"></i> Déconnexion
+                                <i class="fas fa-sign-out-alt me-2"></i> Déconnexion
                             </a>
                         </li>
                     </ul>
@@ -102,63 +437,80 @@
             </nav>
 
             <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+            <main class="main-content">
                 <!-- Dashboard Section -->
                 <div id="dashboard" class="section">
-                    <h2 class="mb-4">Tableau de bord</h2>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="card bg-primary text-white">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-box"></i> Produits
-                                    </h5>
-                                    <h3 id="totalProducts">0</h3>
+                    <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-right">
+                        <h2 class="fw-bold">
+                            <i class="fas fa-tachometer-alt me-2"></i>Tableau de bord
+                        </h2>
+                        <button class="btn btn-primary" onclick="loadDashboard()">
+                            <i class="fas fa-sync-alt me-1"></i> Actualiser
+                        </button>
+                    </div>
+                    
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+                            <div class="dashboard-card stat-card-primary">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-2">Produits</h6>
+                                        <div class="stat-number" id="totalProducts">0</div>
+                                        <small>Total des produits</small>
+                                    </div>
+                                    <i class="fas fa-box fa-2x opacity-50"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card bg-success text-white">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-shopping-cart"></i> Commandes
-                                    </h5>
-                                    <h3 id="totalOrders">0</h3>
+                        <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+                            <div class="dashboard-card stat-card-success">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-2">Commandes</h6>
+                                        <div class="stat-number" id="totalOrders">0</div>
+                                        <small>Total des commandes</small>
+                                    </div>
+                                    <i class="fas fa-shopping-cart fa-2x opacity-50"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card bg-warning text-white">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-clock"></i> En attente
-                                    </h5>
-                                    <h3 id="pendingOrders">0</h3>
+                        <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+                            <div class="dashboard-card stat-card-warning">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-2">En attente</h6>
+                                        <div class="stat-number" id="pendingOrders">0</div>
+                                        <small>Commandes en attente</small>
+                                    </div>
+                                    <i class="fas fa-clock fa-2x opacity-50"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card bg-info text-white">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-envelope"></i> Messages
-                                    </h5>
-                                    <h3 id="totalMessages">0</h3>
+                        <div class="col-md-3" data-aos="fade-up" data-aos-delay="400">
+                            <div class="dashboard-card stat-card-info">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-2">Messages</h6>
+                                        <div class="stat-number" id="totalMessages">0</div>
+                                        <small>Messages reçus</small>
+                                    </div>
+                                    <i class="fas fa-envelope fa-2x opacity-50"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row mt-4">
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5><i class="fas fa-bell"></i> Notifications récentes</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div id="recentNotifications">
-                                        <p class="text-muted">Aucune notification récente</p>
-                                    </div>
+                    <div class="table-container" data-aos="fade-up" data-aos-delay="500">
+                        <div class="table-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-bell me-2"></i>Notifications récentes
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="recentNotifications">
+                                <div class="text-center py-4">
+                                    <i class="fas fa-bell fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">Aucune notification récente</p>
                                 </div>
                             </div>
                         </div>
@@ -167,58 +519,81 @@
 
                 <!-- Products Section -->
                 <div id="products" class="section" style="display: none;">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2>Gestion des produits</h2>
+                    <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-right">
+                        <h2 class="fw-bold">
+                            <i class="fas fa-box me-2"></i>Gestion des produits
+                        </h2>
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">
-                            <i class="fas fa-plus"></i> Ajouter un produit
+                            <i class="fas fa-plus me-1"></i> Ajouter un produit
                         </button>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nom</th>
-                                    <th>Description</th>
-                                    <th>Prix</th>
-                                    <th>Stock</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="productsTable">
-                                <!-- Products will be loaded here -->
-                            </tbody>
-                        </table>
+                    
+                    <div class="table-container" data-aos="fade-up">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom</th>
+                                        <th>Description</th>
+                                        <th>Prix</th>
+                                        <th>Stock</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTable">
+                                    <!-- Products will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Orders Section -->
                 <div id="orders" class="section" style="display: none;">
-                    <h2 class="mb-4">Gestion des commandes</h2>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Client</th>
-                                    <th>Email</th>
-                                    <th>Total</th>
-                                    <th>Statut</th>
-                                    <th>Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ordersTable">
-                                <!-- Orders will be loaded here -->
-                            </tbody>
-                        </table>
+                    <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-right">
+                        <h2 class="fw-bold">
+                            <i class="fas fa-shopping-cart me-2"></i>Gestion des commandes
+                        </h2>
+                        <button class="btn btn-primary" onclick="loadOrders()">
+                            <i class="fas fa-sync-alt me-1"></i> Actualiser
+                        </button>
+                    </div>
+                    
+                    <div class="table-container" data-aos="fade-up">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Client</th>
+                                        <th>Email</th>
+                                        <th>Total</th>
+                                        <th>Statut</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTable">
+                                    <!-- Orders will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Messages Section -->
                 <div id="messages" class="section" style="display: none;">
-                    <h2 class="mb-4">Messages des clients</h2>
-                    <div id="messagesContainer">
+                    <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-right">
+                        <h2 class="fw-bold">
+                            <i class="fas fa-envelope me-2"></i>Messages des clients
+                        </h2>
+                        <button class="btn btn-primary" onclick="loadMessages()">
+                            <i class="fas fa-sync-alt me-1"></i> Actualiser
+                        </button>
+                    </div>
+                    
+                    <div id="messagesContainer" data-aos="fade-up">
                         <!-- Messages will be loaded here -->
                     </div>
                 </div>
@@ -231,36 +606,52 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Ajouter un produit</h5>
+                    <h5 class="modal-title">
+                        <i class="fas fa-box me-2"></i>Ajouter un produit
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="productForm">
                         <div class="mb-3">
-                            <label for="productName" class="form-label">Nom</label>
+                            <label for="productName" class="form-label">
+                                <i class="fas fa-tag me-1"></i> Nom
+                            </label>
                             <input type="text" class="form-control" id="productName" required>
                         </div>
                         <div class="mb-3">
-                            <label for="productDescription" class="form-label">Description</label>
+                            <label for="productDescription" class="form-label">
+                                <i class="fas fa-align-left me-1"></i> Description
+                            </label>
                             <textarea class="form-control" id="productDescription" rows="3"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="productPrice" class="form-label">Prix (€)</label>
+                            <label for="productPrice" class="form-label">
+                                <i class="fas fa-money-bill-wave me-1"></i> Prix (FCFA)
+                            </label>
                             <input type="number" class="form-control" id="productPrice" step="0.01" required>
                         </div>
                         <div class="mb-3">
-                            <label for="productStock" class="form-label">Stock</label>
+                            <label for="productStock" class="form-label">
+                                <i class="fas fa-cubes me-1"></i> Stock
+                            </label>
                             <input type="number" class="form-control" id="productStock" required>
                         </div>
                         <div class="mb-3">
-                            <label for="productImage" class="form-label">URL de l'image</label>
+                            <label for="productImage" class="form-label">
+                                <i class="fas fa-image me-1"></i> URL de l'image
+                            </label>
                             <input type="url" class="form-control" id="productImage">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" onclick="saveProduct()">Enregistrer</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Annuler
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">
+                        <i class="fas fa-save me-1"></i> Enregistrer
+                    </button>
                 </div>
             </div>
         </div>
@@ -271,7 +662,9 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Détails de la commande</h5>
+                    <h5 class="modal-title">
+                        <i class="fas fa-shopping-cart me-2"></i>Détails de la commande
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -280,14 +673,25 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Fermer
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
         let products = [];
         let orders = [];
         let messages = [];
@@ -314,6 +718,102 @@
 
         let editingProductId = null;
 
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).style.display = 'block';
+            
+            // Add active class to clicked link
+            event.target.closest('.nav-link').classList.add('active');
+            
+            // Reinitialize AOS for the new section
+            AOS.refresh();
+        }
+
+        async function loadDashboard() {
+            try {
+                // Load products
+                const productsResponse = await fetch('/api/produits');
+                products = await productsResponse.json();
+                document.getElementById('totalProducts').textContent = products.length;
+
+                // Load orders
+                const ordersResponse = await fetch('/api/commandes');
+                orders = await ordersResponse.json();
+                document.getElementById('totalOrders').textContent = orders.length;
+                
+                const pendingOrders = orders.filter(o => o.statut === 'en_attente').length;
+                document.getElementById('pendingOrders').textContent = pendingOrders;
+
+                // Load messages
+                const messagesResponse = await fetch('/api/messages-boutique');
+                messages = await messagesResponse.json();
+                document.getElementById('totalMessages').textContent = messages.length;
+
+                // Load recent notifications
+                await loadRecentNotifications();
+
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                showNotification('Erreur lors du chargement du tableau de bord', 'error');
+            }
+        }
+
+        async function loadRecentNotifications() {
+            try {
+                const response = await fetch('/api/notifications');
+                const notifications = await response.json();
+                
+                const notificationsHtml = document.getElementById('recentNotifications');
+                
+                if (notifications.commandes.length === 0 && notifications.messages.length === 0) {
+                    notificationsHtml.innerHTML = `
+                        <div class="text-center py-4">
+                            <i class="fas fa-bell fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Aucune notification récente</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                
+                notifications.commandes.forEach(order => {
+                    html += `
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <i class="fas fa-shopping-cart me-2"></i>
+                            <strong>Nouvelle commande #${order.id}</strong> - ${order.client_nom} - ${formatPrice(order.total)}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    `;
+                });
+
+                notifications.messages.forEach(message => {
+                    html += `
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <i class="fas fa-envelope me-2"></i>
+                            <strong>Nouveau message</strong> - ${message.client_nom}: ${message.sujet}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    `;
+                });
+
+                notificationsHtml.innerHTML = html;
+
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
+        }
+
         async function loadProducts() {
             try {
                 const response = await fetch('/api/produits');
@@ -321,6 +821,7 @@
                 displayProducts();
             } catch (error) {
                 console.error('Error loading products:', error);
+                showNotification('Erreur lors du chargement des produits', 'error');
             }
         }
 
@@ -331,16 +832,20 @@
             products.forEach(product => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${product.id}</td>
-                    <td>${product.nom}</td>
+                    <td><span class="badge bg-primary">${product.id}</span></td>
+                    <td><strong>${product.nom}</strong></td>
                     <td>${product.description || '-'}</td>
-                    <td>${formatPrice(product.prix)}</td>
-                    <td>${product.stock}</td>
+                    <td><span class="text-success fw-bold">${formatPrice(product.prix)}</span></td>
                     <td>
-                        <button class="btn btn-sm btn-primary" onclick="editProduct(${product.id})">
+                        <span class="${product.stock <= 5 ? 'text-danger' : 'text-success'}">
+                            <i class="fas fa-cubes me-1"></i>${product.stock}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary btn-action" onclick="editProduct(${product.id})">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">
+                        <button class="btn btn-sm btn-danger btn-action" onclick="deleteProduct(${product.id})">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
@@ -361,7 +866,8 @@
             document.getElementById('productImage').value = product.image_url || '';
             
             // Change modal title
-            document.querySelector('#productModal .modal-title').textContent = 'Modifier un produit';
+            document.querySelector('#productModal .modal-title').innerHTML = 
+                '<i class="fas fa-edit me-2"></i>Modifier un produit';
             
             // Show modal
             const modal = new bootstrap.Modal(document.getElementById('productModal'));
@@ -376,7 +882,7 @@
             const imageUrl = document.getElementById('productImage').value;
             
             if (!name || !price) {
-                alert('Veuillez remplir les champs obligatoires');
+                showNotification('Veuillez remplir les champs obligatoires', 'warning');
                 return;
             }
             
@@ -421,20 +927,22 @@
                     editingProductId = null;
                     
                     // Reset modal title
-                    document.querySelector('#productModal .modal-title').textContent = 'Ajouter un produit';
+                    document.querySelector('#productModal .modal-title').innerHTML = 
+                        '<i class="fas fa-box me-2"></i>Ajouter un produit';
                     
                     // Reload products
                     await loadProducts();
+                    await loadDashboard();
                     
                     // Show success message
-                    alert(editingProductId ? 'Produit modifié avec succès!' : 'Produit ajouté avec succès!');
+                    showNotification(editingProductId ? 'Produit modifié avec succès!' : 'Produit ajouté avec succès!', 'success');
                 } else {
                     const error = await response.json();
-                    alert('Erreur: ' + error.error);
+                    showNotification('Erreur: ' + error.error, 'error');
                 }
             } catch (error) {
                 console.error('Error saving product:', error);
-                alert('Erreur lors de la sauvegarde du produit');
+                showNotification('Erreur lors de la sauvegarde du produit', 'error');
             }
         }
 
@@ -450,139 +958,16 @@
                 
                 if (response.ok) {
                     await loadProducts();
-                    alert('Produit supprimé avec succès!');
+                    await loadDashboard();
+                    showNotification('Produit supprimé avec succès!', 'success');
                 } else {
                     const error = await response.json();
-                    alert('Erreur: ' + error.error);
+                    showNotification('Erreur: ' + error.error, 'error');
                 }
             } catch (error) {
                 console.error('Error deleting product:', error);
-                alert('Erreur lors de la suppression du produit');
+                showNotification('Erreur lors de la suppression du produit', 'error');
             }
-        }
-
-        function showSection(sectionName) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Remove active class from all nav links
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            
-            // Show selected section
-            document.getElementById(sectionName).style.display = 'block';
-            
-            // Add active class to clicked link
-            event.target.classList.add('active');
-        }
-
-        async function loadDashboard() {
-            try {
-                // Load products
-                const productsResponse = await fetch('/api/produits');
-                products = await productsResponse.json();
-                document.getElementById('totalProducts').textContent = products.length;
-
-                // Load orders
-                const ordersResponse = await fetch('/api/commandes');
-                orders = await ordersResponse.json();
-                document.getElementById('totalOrders').textContent = orders.length;
-                
-                const pendingOrders = orders.filter(o => o.statut === 'en_attente').length;
-                document.getElementById('pendingOrders').textContent = pendingOrders;
-
-                // Load messages
-                const messagesResponse = await fetch('/api/messages-boutique');
-                messages = await messagesResponse.json();
-                document.getElementById('totalMessages').textContent = messages.length;
-
-                // Load recent notifications
-                await loadRecentNotifications();
-
-            } catch (error) {
-                console.error('Error loading dashboard:', error);
-            }
-        }
-
-        async function loadRecentNotifications() {
-            try {
-                const response = await fetch('/api/notifications');
-                const notifications = await response.json();
-                
-                const notificationsHtml = document.getElementById('recentNotifications');
-                
-                if (notifications.commandes.length === 0 && notifications.messages.length === 0) {
-                    notificationsHtml.innerHTML = '<p class="text-muted">Aucune notification récente</p>';
-                    return;
-                }
-
-                let html = '';
-                
-                notifications.commandes.forEach(order => {
-                    html += `
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <i class="fas fa-shopping-cart"></i>
-                            <strong>Nouvelle commande #${order.id}</strong> - ${order.client_nom} - ${formatPrice(order.total)}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    `;
-                });
-
-                notifications.messages.forEach(message => {
-                    html += `
-                        <div class="alert alert-info alert-dismissible fade show" role="alert">
-                            <i class="fas fa-envelope"></i>
-                            <strong>Nouveau message</strong> - ${message.client_nom}: ${message.sujet}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    `;
-                });
-
-                notificationsHtml.innerHTML = html;
-
-            } catch (error) {
-                console.error('Error loading notifications:', error);
-            }
-        }
-
-        async function loadProducts() {
-            try {
-                const response = await fetch('/api/produits');
-                products = await response.json();
-                displayProducts();
-            } catch (error) {
-                console.error('Error loading products:', error);
-            }
-        }
-
-        function displayProducts() {
-            const tbody = document.getElementById('productsTable');
-            tbody.innerHTML = '';
-
-            products.forEach(product => {
-                const row = `
-                    <tr>
-                        <td>${product.id}</td>
-                        <td>${product.nom}</td>
-                        <td>${product.description || '-'}</td>
-                        <td>${formatPrice(product.prix)}</td>
-                        <td>
-                            <span class="${product.stock <= 5 ? 'text-danger' : 'text-success'}">
-                                ${product.stock}
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" onclick="editProduct(${product.id})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
         }
 
         async function loadOrders() {
@@ -592,6 +977,7 @@
                 displayOrders();
             } catch (error) {
                 console.error('Error loading orders:', error);
+                showNotification('Erreur lors du chargement des commandes', 'error');
             }
         }
 
@@ -603,10 +989,10 @@
                 const statusClass = `status-${order.statut}`;
                 const row = `
                     <tr>
-                        <td>${order.id}</td>
-                        <td>${order.client_nom}</td>
+                        <td><span class="badge bg-primary">#${order.id}</span></td>
+                        <td><strong>${order.client_nom}</strong></td>
                         <td>${order.client_email}</td>
-                        <td>${formatPrice(order.total)}</td>
+                        <td><span class="text-success fw-bold">${formatPrice(order.total)}</span></td>
                         <td>
                             <select class="form-select form-select-sm status-badge ${statusClass}" 
                                     onchange="updateOrderStatus(${order.id}, this.value)">
@@ -616,9 +1002,9 @@
                                 <option value="annulee" ${order.statut === 'annulee' ? 'selected' : ''}>Annulée</option>
                             </select>
                         </td>
-                        <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                        <td><small>${new Date(order.created_at).toLocaleDateString()}</small></td>
                         <td>
-                            <button class="btn btn-sm btn-info" onclick="showOrderDetails(${order.id})">
+                            <button class="btn btn-sm btn-info btn-action" onclick="showOrderDetails(${order.id})">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </td>
@@ -635,6 +1021,7 @@
                 displayMessages();
             } catch (error) {
                 console.error('Error loading messages:', error);
+                showNotification('Erreur lors du chargement des messages', 'error');
             }
         }
 
@@ -645,68 +1032,34 @@
             messages.forEach(message => {
                 const messageClass = message.statut === 'non_lu' ? 'message-non_lu' : '';
                 const messageDiv = `
-                    <div class="card mb-3 ${messageClass}">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h6 class="card-title">${message.sujet}</h6>
-                                    <p class="card-text">
-                                        <strong>De:</strong> ${message.client_nom} (${message.client_email})<br>
-                                        <small class="text-muted">${new Date(message.created_at).toLocaleString()}</small>
-                                    </p>
-                                    <p class="card-text">${message.message}</p>
-                                </div>
-                                <div>
-                                    ${message.statut === 'non_lu' ? 
-                                        `<button class="btn btn-sm btn-success" onclick="markAsRead(${message.id})">
-                                            <i class="fas fa-check"></i> Marquer comme lu
-                                        </button>` : 
-                                        '<span class="badge bg-success">Lu</span>'
-                                    }
-                                </div>
+                    <div class="message-card ${messageClass}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-2">
+                                    <i class="fas fa-envelope me-2"></i>${message.sujet}
+                                </h6>
+                                <p class="mb-2">
+                                    <strong>De:</strong> ${message.client_nom} (${message.client_email})<br>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>
+                                        ${new Date(message.created_at).toLocaleString()}
+                                    </small>
+                                </p>
+                                <p class="mb-0">${message.message}</p>
+                            </div>
+                            <div class="ms-3">
+                                ${message.statut === 'non_lu' ? 
+                                    `<button class="btn btn-sm btn-success btn-action" onclick="markAsRead(${message.id})">
+                                        <i class="fas fa-check me-1"></i> Marquer comme lu
+                                    </button>` : 
+                                    '<span class="badge bg-success"><i class="fas fa-check me-1"></i>Lu</span>'
+                                }
                             </div>
                         </div>
                     </div>
                 `;
                 container.innerHTML += messageDiv;
             });
-        }
-
-        async function saveProduct() {
-            const name = document.getElementById('productName').value;
-            const description = document.getElementById('productDescription').value;
-            const price = parseFloat(document.getElementById('productPrice').value);
-            const stock = parseInt(document.getElementById('productStock').value);
-            const imageUrl = document.getElementById('productImage').value;
-
-            try {
-                const response = await fetch('/api/produits', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        nom: name,
-                        description: description,
-                        prix: price,
-                        stock: stock,
-                        image_url: imageUrl
-                    })
-                });
-
-                if (response.ok) {
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
-                    modal.hide();
-                    document.getElementById('productForm').reset();
-                    loadProducts();
-                    loadDashboard();
-                } else {
-                    alert('Erreur lors de l\'ajout du produit');
-                }
-            } catch (error) {
-                console.error('Error saving product:', error);
-                alert('Erreur lors de l\'ajout du produit');
-            }
         }
 
         async function updateOrderStatus(orderId, newStatus) {
@@ -720,14 +1073,15 @@
                 });
 
                 if (response.ok) {
-                    loadOrders();
-                    loadDashboard();
+                    await loadOrders();
+                    await loadDashboard();
+                    showNotification('Statut de la commande mis à jour', 'success');
                 } else {
-                    alert('Erreur lors de la mise à jour du statut');
+                    showNotification('Erreur lors de la mise à jour du statut', 'error');
                 }
             } catch (error) {
                 console.error('Error updating order status:', error);
-                alert('Erreur lors de la mise à jour du statut');
+                showNotification('Erreur lors de la mise à jour du statut', 'error');
             }
         }
 
@@ -744,7 +1098,7 @@
                             <td>${item.produit_nom}</td>
                             <td>${item.quantite}</td>
                             <td>${formatPrice(item.prix_unitaire)}</td>
-                            <td>${formatPrice(item.quantite * item.prix_unitaire)}</td>
+                            <td><strong>${formatPrice(item.quantite * item.prix_unitaire)}</strong></td>
                         </tr>
                     `;
                 });
@@ -752,8 +1106,135 @@
                 const detailsHtml = `
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <strong>Commande #${order.id}</strong>
+                            <h6><i class="fas fa-shopping-cart me-2"></i>Commande #${order.id}</h6>
                         </div>
+                        <div class="col-md-6 text-end">
+                            <span class="status-badge status-${order.statut}">${order.statut}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong><i class="fas fa-user me-2"></i>Client:</strong> ${order.client_nom}
+                        </div>
+                        <div class="col-md-6">
+                            <strong><i class="fas fa-envelope me-2"></i>Email:</strong> ${order.client_email}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <strong><i class="fas fa-calendar me-2"></i>Date:</strong> ${new Date(order.created_at).toLocaleString()}
+                        </div>
+                    </div>
+                    <hr>
+                    <h6 class="mb-3"><i class="fas fa-list me-2"></i>Articles commandés</h6>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Quantité</th>
+                                    <th>Prix unitaire</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${itemsHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12 text-end">
+                            <h5><strong>Total: ${formatPrice(order.total)}</strong></h5>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('orderDetails').innerHTML = detailsHtml;
+                const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
+                modal.show();
+            } catch (error) {
+                console.error('Error loading order details:', error);
+                showNotification('Erreur lors du chargement des détails de la commande', 'error');
+            }
+        }
+
+        async function markAsRead(messageId) {
+            try {
+                const response = await fetch(`/api/messages-boutique/${messageId}/lu`, {
+                    method: 'PUT'
+                });
+
+                if (response.ok) {
+                    await loadMessages();
+                    await loadDashboard();
+                    showNotification('Message marqué comme lu', 'success');
+                } else {
+                    showNotification('Erreur lors du marquage du message', 'error');
+                }
+            } catch (error) {
+                console.error('Error marking message as read:', error);
+                showNotification('Erreur lors du marquage du message', 'error');
+            }
+        }
+
+        async function checkNotifications() {
+            try {
+                const response = await fetch('/api/notifications');
+                const notifications = await response.json();
+                
+                // Update badges
+                const orderBadge = document.getElementById('orderBadge');
+                const messageBadge = document.getElementById('messageBadge');
+                
+                if (notifications.commandes.length > 0) {
+                    orderBadge.textContent = notifications.commandes.length;
+                    orderBadge.style.display = 'flex';
+                } else {
+                    orderBadge.style.display = 'none';
+                }
+                
+                if (notifications.messages.length > 0) {
+                    messageBadge.textContent = notifications.messages.length;
+                    messageBadge.style.display = 'flex';
+                } else {
+                    messageBadge.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error checking notifications:', error);
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const alertClass = {
+                'success': 'alert-success',
+                'error': 'alert-danger',
+                'warning': 'alert-warning',
+                'info': 'alert-info'
+            }[type] || 'alert-info';
+
+            const icon = {
+                'success': 'fas fa-check-circle',
+                'error': 'fas fa-exclamation-triangle',
+                'warning': 'fas fa-exclamation-triangle',
+                'info': 'fas fa-info-circle'
+            }[type] || 'fas fa-info-circle';
+
+            const notification = document.createElement('div');
+            notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                <i class="${icon} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+    </script>
                         <div class="col-md-6 text-end">
                             <strong>Date:</strong> ${new Date(order.created_at).toLocaleDateString()}
                         </div>

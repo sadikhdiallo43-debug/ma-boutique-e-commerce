@@ -121,60 +121,60 @@ def init_sample_products():
     if count == 0:
         sample_products = [
             {
-                'nom': 'Ordinateur Portable Pro',
-                'description': 'Ordinateur portable haute performance pour professionnels avec processeur Intel Core i7',
-                'prix': 750000,
-                'stock': 15,
-                'image_url': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300&h=200&fit=crop'
-            },
-            {
-                'nom': 'Smartphone Premium',
-                'description': 'Dernier modèle de smartphone avec appareil photo avancé et écran AMOLED',
-                'prix': 520000,
-                'stock': 25,
-                'image_url': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300&h=200&fit=crop'
-            },
-            {
-                'nom': 'Casque Audio Sans Fil',
-                'description': 'Casque Bluetooth avec réduction de bruit active et autonomie 30h',
-                'prix': 115000,
-                'stock': 50,
-                'image_url': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=200&fit=crop'
-            },
-            {
-                'nom': 'Montre Connectée',
-                'description': 'Smartwatch avec suivi fitness, GPS et notifications intelligentes',
-                'prix': 175000,
-                'stock': 30,
-                'image_url': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=200&fit=crop'
-            },
-            {
-                'nom': 'Tablette Tactile',
-                'description': 'Tablette 10 pouces idéale pour travail et divertissement, 128GB storage',
-                'prix': 260000,
-                'stock': 20,
-                'image_url': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=300&h=200&fit=crop'
-            },
-            {
-                'nom': 'Clavier Mécanique RGB',
-                'description': 'Clavier gaming avec rétroéclairage RGB personnalisable, switches bleus',
-                'prix': 87000,
-                'stock': 35,
-                'image_url': 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=200&fit=crop'
-            },
-            {
-                'nom': 'Écran 4K Ultra HD',
-                'description': 'Moniteur 27 pouces 4K avec HDR et taux de rafraîchissement 144Hz',
-                'prix': 320000,
+                'nom': 'Robe Élégante Soie',
+                'description': 'Robe longue en soie avec design floral, parfaite pour occasions spéciales',
+                'prix': 45000,
                 'stock': 12,
-                'image_url': 'https://images.unsplash.com/photo-1527443224642-b4911692a5d7?w=300&h=200&fit=crop'
+                'image_url': 'https://images.unsplash.com/photo-1594633312681-ba9d7b5f5c3f?w=300&h=400&fit=crop'
             },
             {
-                'nom': 'Webcam HD Pro',
-                'description': 'Webcam 1080p avec autofocus et micro intégré pour visioconférence',
-                'prix': 75000,
-                'stock': 40,
-                'image_url': 'https://images.unsplash.com/photo-1596469135214-ea95bc194628?w=300&h=200&fit=crop'
+                'nom': 'Blazer Chic',
+                'description': 'Blazer moderne coupe ajustée en laine mélangée, idéal pour le bureau',
+                'prix': 65000,
+                'stock': 18,
+                'image_url': 'https://images.unsplash.com/photo-1554568218-0f1715e72254?w=300&h=400&fit=crop'
+            },
+            {
+                'nom': 'Jean Slim Fit',
+                'description': 'Jean slim de haute qualité avec stretch, disponible en plusieurs couleurs',
+                'prix': 28000,
+                'stock': 35,
+                'image_url': 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=400&fit=crop'
+            },
+            {
+                'nom': 'Chemise en Lin',
+                'description': 'Chemise légère en lin parfait pour l\'été, coupe moderne et élégante',
+                'prix': 22000,
+                'stock': 25,
+                'image_url': 'https://images.unsplash.com/photo-1596755094514-f87e5ccf6e6d?w=300&h=400&fit=crop'
+            },
+            {
+                'nom': 'Veste en Cuir',
+                'description': 'Veste en cuir véritable style motard, doublure confortable',
+                'prix': 85000,
+                'stock': 8,
+                'image_url': 'https://images.unsplash.com/photo-1551488831-008076e2dcba?w=300&h=400&fit=crop'
+            },
+            {
+                'nom': 'Pull en Cashmere',
+                'description': 'Pull luxueux en cachemire, doux et chaud pour l\'hiver',
+                'prix': 72000,
+                'stock': 15,
+                'image_url': 'https://images.unsplash.com/photo-1578922772014-3c5e5a14e4f5?w=300&h=400&fit=crop'
+            },
+            {
+                'nom': 'Jupe Plissée',
+                'description': 'Jupe plissée tendance, longueur midi, tissu fluide et élégant',
+                'prix': 32000,
+                'stock': 20,
+                'image_url': 'https://images.unsplash.com/photo-1595775456939-3a8b5b1c3e4e?w=300&h=400&fit=crop'
+            },
+            {
+                'nom': 'Pantalon Chino',
+                'description': 'Pantalon chino classique, polyvalent et confortable pour toutes occasions',
+                'prix': 35000,
+                'stock': 30,
+                'image_url': 'https://images.unsplash.com/photo-1594633312681-ba9d7b5f5c3f?w=300&h=400&fit=crop'
             }
         ]
         
